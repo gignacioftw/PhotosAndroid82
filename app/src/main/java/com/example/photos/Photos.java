@@ -1,3 +1,4 @@
+//Gabriel Ignacio
 package com.example.photos;
 
 import android.content.DialogInterface;
