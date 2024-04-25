@@ -1,23 +1,32 @@
 package com.example.photos;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import com.example.photos.Album;
 
 import java.util.ArrayList;
 
 public class AlbumGVAdapter extends ArrayAdapter<Album> {
+    ArrayList<View> cards;
+    Context context;
 
     public AlbumGVAdapter(@NonNull Context context, ArrayList<Album> albumList) {
         super(context, 0, albumList);
+        this.context = context;
+        cards = new ArrayList<View>();
     }
 
     @NonNull
@@ -34,8 +43,21 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
         TextView courseTV = listitemView.findViewById(R.id.item_name);
         ImageView courseIV = listitemView.findViewById(R.id.grid_image);
 
-        courseTV.setText(album.getAlbumName());
-        courseIV.setImageResource(R.drawable._0down);
+        courseTV.setText(album.getAlbumName() +"\n" +album.getNumOfPhotos()+" photos");
+        courseIV.setImageResource(R.drawable.folder);
+        View finalListitemView = listitemView;
+        cards.add(listitemView);
+        listitemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(View view : cards){
+                    if(view != finalListitemView){
+                        view.setBackgroundColor(Color.parseColor("#ffffff"));
+                    }
+                }
+                finalListitemView.setBackgroundColor(Color.parseColor("#dae7f3"));
+            }
+        });
         return listitemView;
     }
 }

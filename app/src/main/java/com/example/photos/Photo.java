@@ -12,10 +12,7 @@ import java.util.Calendar;
 public class Photo implements Serializable {
     protected String name;
     protected String path;
-    protected String caption;
     protected ArrayList<Tag> tags = new ArrayList<>();
-
-    protected Calendar date;
     public Photo(){
 
     }
@@ -25,26 +22,12 @@ public class Photo implements Serializable {
         this.path = path;
     }
 
-    public Photo(String name, String path, Calendar date){
-        this.name = name;
-        this.path = path;
-        this.date = date;
-    }
-
     public String getPath(){
         return path;
     }
 
     public String getName(){
         return name;
-    }
-
-    public String getCaption(){
-        return caption;
-    }
-
-    public void addCaption(String caption){
-        this.caption = caption;
     }
 
     public void addTag(Tag tag){
@@ -80,9 +63,5 @@ public class Photo implements Serializable {
             }
         }
         return false;
-    }
-
-    public Calendar getDate(){
-        return date;
     }
 }

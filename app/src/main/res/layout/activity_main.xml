@@ -9,16 +9,15 @@
 
     <GridView
         android:id="@+id/albumGrid"
-        android:layout_width="411dp"
-        android:layout_height="459dp"
-        android:layout_marginTop="75dp"
-        android:horizontalSpacing="6dp"
+        android:layout_width="408dp"
+        android:layout_height="468dp"
+        android:horizontalSpacing="3dp"
         android:numColumns="3"
         android:verticalSpacing="6dp"
         app:layout_constraintBottom_toTopOf="@+id/addAlbum"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.239"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintVertical_bias="0.245"
+        tools:layout_editor_absoluteX="1dp" />
 
     <Button
         android:id="@+id/addAlbum"
