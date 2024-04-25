@@ -1,22 +1,16 @@
 package com.example.photos;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-
-import com.example.photos.Album;
-
 import java.util.ArrayList;
 
 public class AlbumGVAdapter extends ArrayAdapter<Album> {
@@ -31,10 +25,11 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
         super(context, 0, albumList);
         this.context = context;
         this.albumList = albumList;
-        cards = new ArrayList<View>();
+        cards = new ArrayList<>();
         selected = null;
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -53,17 +48,14 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
         courseIV.setImageResource(R.drawable.folder);
         View finalListitemView = listitemView;
         cards.add(listitemView);
-        listitemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for(View view : cards){
-                    if(view != finalListitemView){
-                        view.setBackgroundColor(Color.parseColor("#ffffff"));
-                    }
+        listitemView.setOnClickListener(v -> {
+            for(View view : cards){
+                if(view != finalListitemView){
+                    view.setBackgroundColor(Color.parseColor("#ffffff"));
                 }
-                finalListitemView.setBackgroundColor(Color.parseColor("#dae7f3"));
-                selected = finalListitemView;
             }
+            finalListitemView.setBackgroundColor(Color.parseColor("#dae7f3"));
+            selected = finalListitemView;
         });
         return listitemView;
     }
@@ -84,5 +76,15 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
         for(View view : cards){
             view.setBackgroundColor(Color.parseColor("#ffffff"));
         }
+    }
+
+    public void renameItem(String oldName, String newName){
+        for(Album a : albumList){
+            if(a.getAlbumName().equals(oldName)){
+                a.changeName(newName);
+            }
+        }
+        selected = null;
+        notifyDataSetChanged();
     }
 }
