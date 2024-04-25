@@ -3,15 +3,13 @@ package com.example.photos;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.TableLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,11 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Photos extends AppCompatActivity {
     String storeDir;
@@ -37,6 +31,8 @@ public class Photos extends AppCompatActivity {
     private Button addButton;
     private EditText albumNameInput;
 
+    private Button deleteButton;
+
     private ArrayList<Album> albumList;
 
     @Override
@@ -45,6 +41,7 @@ public class Photos extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         albumGrid = findViewById(R.id.albumGrid);
         addButton = findViewById(R.id.addAlbum);
+        deleteButton = findViewById(R.id.deleteAlbum);
         try {
             if(hasData()){
                 loadContent();
@@ -70,9 +67,14 @@ public class Photos extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String s = albumNameInput.getText().toString();
-                albumList.add(new Album(s));
-                albumGrid.setAdapter(albumGVAdapter);
-                dialog.dismiss();
+                if(!hasAlbum(s)){
+                    albumList.add(new Album(s));
+                    albumGrid.setAdapter(albumGVAdapter);
+                    dialog.dismiss();
+                }
+                else{
+                    albumNameInput.setError("Duplicate album name");
+                }
             }
         });
         b.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -92,15 +94,20 @@ public class Photos extends AppCompatActivity {
                     public void onClick(View v) {
                         boolean wantToCloseDialog = (albumNameInput.getText().toString().trim().isEmpty());
                         if (!wantToCloseDialog) {
-                            albumList.add(new Album(albumNameInput.getText().toString()));
-                            albumGrid.setAdapter(albumGVAdapter);
-                            try {
-                                writeApp(albumList);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
+                            if(!hasAlbum(albumNameInput.getText().toString())){
+                                albumList.add(new Album(albumNameInput.getText().toString()));
+                                albumGrid.setAdapter(albumGVAdapter);
+                                try {
+                                    writeApp(albumList);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                a.dismiss();
+                                albumNameInput.setText(null);
                             }
-                            a.dismiss();
-                            albumNameInput.setText(null);
+                            else{
+                                albumNameInput.setError("Duplicate album name");
+                            }
                         }
                         else
                             albumNameInput.setError("Please enter a valid name");
@@ -109,6 +116,28 @@ public class Photos extends AppCompatActivity {
             }
         });
 
+        deleteButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                if(albumGVAdapter.selected != null){
+                    String text =((TextView)albumGVAdapter.selected.findViewById(R.id.item_name)).getText().toString();
+                    String name = text.substring(0, text.indexOf("\n"));
+                    Toast.makeText(Photos.this, name + " was deleted", Toast.LENGTH_SHORT).show();
+                    albumGVAdapter.removeItem(name);
+                    try {
+                        writeApp(albumList);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    albumGVAdapter.deselect();
+                }
+                else{
+                    Toast.makeText(Photos.this, "Please select an album", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
     }
 
     public void loadContent() throws IOException, ClassNotFoundException {
@@ -147,5 +176,14 @@ public class Photos extends AppCompatActivity {
 
     public Boolean hasData() throws IOException{
         return new File("/data/user/0/com.example.photos/files/data.dat").exists();
+    }
+
+    public Boolean hasAlbum(String name){
+        for(Album a : albumList){
+            if(a.getAlbumName().equals(name)){
+                return true;
+            }
+        }
+        return false;
     }
 }

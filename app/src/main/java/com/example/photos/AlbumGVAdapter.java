@@ -23,10 +23,16 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
     ArrayList<View> cards;
     Context context;
 
+    View selected;
+
+    ArrayList<Album> albumList;
+
     public AlbumGVAdapter(@NonNull Context context, ArrayList<Album> albumList) {
         super(context, 0, albumList);
         this.context = context;
+        this.albumList = albumList;
         cards = new ArrayList<View>();
+        selected = null;
     }
 
     @NonNull
@@ -56,8 +62,27 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
                     }
                 }
                 finalListitemView.setBackgroundColor(Color.parseColor("#dae7f3"));
+                selected = finalListitemView;
             }
         });
         return listitemView;
+    }
+
+    public void removeItem(String albumName){
+        int position = 0;
+        for(Album a : albumList){
+            if(a.getAlbumName().equals(albumName)){
+                position = albumList.indexOf(a);
+            }
+        }
+        albumList.remove(position);
+        selected = null;
+        notifyDataSetChanged();
+    }
+
+    public void deselect(){
+        for(View view : cards){
+            view.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
     }
 }

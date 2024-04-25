@@ -14,10 +14,11 @@
         android:horizontalSpacing="3dp"
         android:numColumns="3"
         android:verticalSpacing="6dp"
-        app:layout_constraintBottom_toTopOf="@+id/addAlbum"
+        app:layout_constraintBottom_toTopOf="@+id/deleteAlbum"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.245"
-        tools:layout_editor_absoluteX="1dp" />
+        tools:layout_editor_absoluteX="1dp"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/addAlbum"
@@ -28,6 +29,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.115"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.953"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/deleteAlbum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Album"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.786"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.953"
