@@ -1,7 +1,10 @@
 package com.example.photos;
 
 
+import android.net.Uri;
+
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -11,18 +14,18 @@ import java.util.Calendar;
  */
 public class Photo implements Serializable {
     protected String name;
-    protected String path;
+    protected Uri path;
     protected ArrayList<Tag> tags = new ArrayList<>();
     public Photo(){
 
     }
 
-    public Photo(String name, String path){
+    public Photo(String name, Uri path){
         this.name = name;
         this.path = path;
     }
 
-    public String getPath(){
+    public Uri getPath(){
         return path;
     }
 

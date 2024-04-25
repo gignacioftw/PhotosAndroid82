@@ -3,6 +3,7 @@ package com.example.photos;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Photos extends AppCompatActivity {
@@ -38,6 +40,8 @@ public class Photos extends AppCompatActivity {
         Button addButton = findViewById(R.id.addAlbum);
         Button deleteButton = findViewById(R.id.deleteAlbum);
         Button renameButton = findViewById(R.id.renameAlbum);
+        Button openButton = findViewById(R.id.openAlbum);
+        Button deselectButton = findViewById(R.id.deselectButton);
         try {
             if(hasData()){
                 loadContent();
@@ -72,6 +76,7 @@ public class Photos extends AppCompatActivity {
         });
         b.setNegativeButton("Cancel", (dialog, which) -> {
             albumNameInput.setText(null);
+            albumGVAdapter.deselect();
             dialog.dismiss();
         });
         AlertDialog a = b.create();
@@ -97,6 +102,7 @@ public class Photos extends AppCompatActivity {
                     }
                 }
                 dialog.dismiss();
+                albumGVAdapter.deselect();
                 renameInput.setText(null);
             }
             else{
@@ -104,6 +110,7 @@ public class Photos extends AppCompatActivity {
             }
         });
         r.setNegativeButton("Cancel", (dialog, which) -> {
+            albumGVAdapter.deselect();
             renameInput.setText(null);
             dialog.dismiss();
         });
@@ -115,19 +122,23 @@ public class Photos extends AppCompatActivity {
             a.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v1 -> {
                 boolean wantToCloseDialog = (albumNameInput.getText().toString().trim().isEmpty());
                 if (!wantToCloseDialog) {
-                    if(!hasAlbum(albumNameInput.getText().toString())){
-                        albumList.add(new Album(albumNameInput.getText().toString()));
-                        albumGrid.setAdapter(albumGVAdapter);
-                        try {
-                            writeApp();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+                    if(!albumNameInput.getText().toString().contains("\n")) {
+                        if (!hasAlbum(albumNameInput.getText().toString())) {
+                            albumList.add(new Album(albumNameInput.getText().toString()));
+                            albumGrid.setAdapter(albumGVAdapter);
+                            try {
+                                writeApp();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            a.dismiss();
+                            albumNameInput.setText(null);
+                        } else {
+                            albumNameInput.setError("Duplicate album name");
                         }
-                        a.dismiss();
-                        albumNameInput.setText(null);
                     }
                     else{
-                        albumNameInput.setError("Duplicate album name");
+                        albumNameInput.setError("Please enter one line");
                     }
                 }
                 else
@@ -140,7 +151,7 @@ public class Photos extends AppCompatActivity {
             if(albumGVAdapter.selected != null){
                 String text =((TextView)albumGVAdapter.selected.findViewById(R.id.item_name)).getText().toString();
                 String name = text.substring(0, text.indexOf("\n"));
-                Toast.makeText(Photos.this, name + " was deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Photos.this, abbrev(name) + " was deleted", Toast.LENGTH_SHORT).show();
                 albumGVAdapter.removeItem(name);
                 try {
                     writeApp();
@@ -161,8 +172,9 @@ public class Photos extends AppCompatActivity {
                 rename.show();
                 rename.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v3 -> {
                     String s = renameInput.getText().toString();
-                    if(!hasAlbum(s)){
-                        String text = ((TextView) albumGVAdapter.selected.findViewById(R.id.item_name)).getText().toString();
+                    if(!s.contains("\n")) {
+                        if (!hasAlbum(s)) {
+                            String text = ((TextView) albumGVAdapter.selected.findViewById(R.id.item_name)).getText().toString();
                             String name = text.substring(0, text.indexOf("\n"));
                             Toast.makeText(Photos.this, "Album renamed", Toast.LENGTH_SHORT).show();
                             albumGVAdapter.renameItem(name, renameInput.getText().toString());
@@ -171,15 +183,45 @@ public class Photos extends AppCompatActivity {
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
-                        rename.dismiss();
-                        albumNameInput.setText(null);
+                            rename.dismiss();
+                            renameInput.setText(null);
+                            albumGVAdapter.deselect();
+                        } else {
+                            renameInput.setError("Duplicate album name");
+                        }
                     }
                     else{
-                        renameInput.setError("Duplicate album name");
+                        renameInput.setError("Please enter one line");
                     }
                 });
             }
             else {
+                Toast.makeText(Photos.this, "Please select an album", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //deselect
+        deselectButton.setOnClickListener(v4 -> albumGVAdapter.deselect());
+
+        //open album
+        openButton.setOnClickListener(v5 -> {
+            if(albumGVAdapter.selected != null){
+                String text = ((TextView) albumGVAdapter.selected.findViewById(R.id.item_name)).getText().toString();
+                String name = text.substring(0, text.indexOf("\n"));
+                Toast.makeText(Photos.this, "Opening " +name, Toast.LENGTH_SHORT).show();
+                albumGVAdapter.deselect();
+                Intent intent = new Intent(this, PhotoMenu.class);
+                Bundle args = new Bundle();
+                for(Album album : albumList) {
+                    if(abbrev(album.getAlbumName()).equals(name)){
+                        args.putSerializable("album", album);
+                    }
+                }
+                args.putSerializable("albumList", albumList);
+                intent.putExtras(args);
+                startActivity(intent);
+            }
+            else{
                 Toast.makeText(Photos.this, "Please select an album", Toast.LENGTH_SHORT).show();
             }
         });
@@ -232,5 +274,15 @@ public class Photos extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    public static String abbrev(String s){
+        if(s.length() > 10){
+            String ret = s.substring(0, 11);
+            return ret + "...";
+        }
+        else{
+            return s;
+        }
     }
 }

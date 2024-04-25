@@ -5,38 +5,47 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="0dp"
     tools:context=".Photos">
 
     <GridView
         android:id="@+id/albumGrid"
-        android:layout_width="408dp"
-        android:layout_height="468dp"
-        android:horizontalSpacing="3dp"
+        android:layout_width="385dp"
+        android:layout_height="420dp"
+        android:layout_marginBottom="70dp"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:horizontalSpacing="1dp"
         android:numColumns="3"
+        android:padding="1dp"
+        android:paddingLeft="1dp"
+        android:paddingTop="0dp"
+        android:paddingRight="1dp"
+        android:paddingBottom="1dp"
         android:verticalSpacing="6dp"
-        app:layout_constraintBottom_toTopOf="@+id/deleteAlbum"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.245"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.368"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="1dp" />
+        tools:layout_editor_absoluteX="13dp" />
 
     <Button
         android:id="@+id/addAlbum"
-        android:layout_width="100dp"
+        android:layout_width="102dp"
         android:layout_height="69dp"
         android:text="Create Album"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.003"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.951"
+        app:layout_constraintVertical_bias="1.0"
         tools:visibility="visible" />
 
     <Button
         android:id="@+id/deleteAlbum"
-        android:layout_width="100dp"
+        android:layout_width="102dp"
         android:layout_height="68dp"
         android:text="Delete Album"
         android:visibility="visible"
@@ -45,26 +54,26 @@
         app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95"
+        app:layout_constraintVertical_bias="1.0"
         tools:visibility="visible" />
 
     <Button
         android:id="@+id/openAlbum"
-        android:layout_width="100dp"
+        android:layout_width="102dp"
         android:layout_height="68dp"
         android:text="Open Album"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.993"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.951"
+        app:layout_constraintVertical_bias="1.0"
         tools:visibility="visible" />
 
     <Button
         android:id="@+id/renameAlbum"
-        android:layout_width="101dp"
+        android:layout_width="102dp"
         android:layout_height="68dp"
         android:text="Rename Album"
         android:visibility="visible"
@@ -73,7 +82,47 @@
         app:layout_constraintHorizontal_bias="0.663"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95"
+        app:layout_constraintVertical_bias="1.0"
         tools:visibility="visible" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="3dp" />
+
+    <TextView
+        android:id="@+id/activityLabel"
+        android:layout_width="123dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="12dp"
+        android:text="Albums"
+        android:textColor="@android:color/white"
+        android:textSize="34sp"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <Button
+        android:id="@+id/deselectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="275dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:text="Deselect"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="1.0"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="1dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

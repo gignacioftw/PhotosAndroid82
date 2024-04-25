@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="0dp"
+    tools:context=".PhotoMenu">
+
+    <GridView
+        android:id="@+id/photoGrid"
+        android:layout_width="fill_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="95dp"
+        android:layout_marginBottom="15dp"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:horizontalSpacing="1dp"
+        android:numColumns="3"
+        android:padding="1dp"
+        android:paddingLeft="1dp"
+        android:paddingTop="0dp"
+        android:paddingRight="1dp"
+        android:paddingBottom="1dp"
+        android:verticalSpacing="6dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.416"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="5dp" />
+
+    <Button
+        android:id="@+id/uploadPhoto"
+        android:layout_width="102dp"
+        android:layout_height="69dp"
+        android:text="Upload Photo"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.003"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/photoToolbar"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="3dp" />
+
+    <TextView
+        android:id="@+id/photoLabel"
+        android:layout_width="236dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="12dp"
+        android:text="Album"
+        android:textColor="@android:color/white"
+        android:textSize="34sp"
+        app:layout_constraintStart_toStartOf="@+id/photoToolbar"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="17dp" />
+
+    <Button
+        android:id="@+id/photoDeselect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="275dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:text="Deselect"
+        app:layout_constraintBottom_toBottomOf="@+id/photoToolbar"
+        app:layout_constraintEnd_toEndOf="@+id/photoToolbar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/photoToolbar"
+        app:layout_constraintTop_toTopOf="@+id/photoToolbar"
+        app:layout_constraintVertical_bias="1.0"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="1dp" />
+
+    <ImageView
+        android:id="@+id/previewSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="137dp"
+        tools:layout_editor_absoluteY="512dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

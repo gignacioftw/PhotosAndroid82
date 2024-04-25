@@ -14,19 +14,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class AlbumGVAdapter extends ArrayAdapter<Album> {
+public class PhotoGVAdapter extends ArrayAdapter<Photo>{
     ArrayList<View> cards;
     Context context;
 
     View selected;
 
-    ArrayList<Album> albumList;
+    List<Photo> photoList;
 
-    public AlbumGVAdapter(@NonNull Context context, ArrayList<Album> albumList) {
-        super(context, 0, albumList);
+    public PhotoGVAdapter(@NonNull Context context, List<Photo> photoList) {
+        super(context, 0, photoList);
         this.context = context;
-        this.albumList = albumList;
+        this.photoList = photoList;
         cards = new ArrayList<>();
         selected = null;
     }
@@ -42,12 +43,12 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
             listitemView = LayoutInflater.from(getContext()).inflate(R.layout.grid_item, parent, false);
         }
 
-        Album album = getItem(position);
+        Photo p = getItem(position);
         TextView courseTV = listitemView.findViewById(R.id.item_name);
         ImageView courseIV = listitemView.findViewById(R.id.grid_image);
 
-        courseTV.setText(abbrev(album.getAlbumName()) +"\n" +album.getNumOfPhotos()+" photos");
-        courseIV.setImageResource(R.drawable.folder);
+        courseTV.setText(abbrev(p.getName()));
+        courseIV.setImageURI(p.getPath());
         View finalListitemView = listitemView;
         cards.add(listitemView);
         listitemView.setOnClickListener(v -> {
@@ -62,7 +63,7 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
         return listitemView;
     }
 
-    public void removeItem(String albumName){
+    /*public void removeItem(String albumName){
         int position = 0;
         for(Album a : albumList){
             if((abbrev(a.getAlbumName())).equals(albumName)){
@@ -88,5 +89,5 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
         }
         selected = null;
         notifyDataSetChanged();
-    }
+    }*/
 }
