@@ -1,6 +1,5 @@
 # TODO
 __Albums__
-- Rename album
 - Open album
 
 __Photo__
