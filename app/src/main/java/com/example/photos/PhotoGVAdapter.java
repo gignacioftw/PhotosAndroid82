@@ -23,9 +23,9 @@ public class PhotoGVAdapter extends ArrayAdapter<Photo>{
 
     View selected;
 
-    List<Photo> photoList;
+    ArrayList<Photo> photoList;
 
-    public PhotoGVAdapter(@NonNull Context context, List<Photo> photoList) {
+    public PhotoGVAdapter(@NonNull Context context, ArrayList<Photo> photoList) {
         super(context, 0, photoList);
         this.context = context;
         this.photoList = photoList;
@@ -50,6 +50,7 @@ public class PhotoGVAdapter extends ArrayAdapter<Photo>{
 
         courseTV.setText(abbrev(p.getName()));
         courseIV.setImageURI(Uri.parse(p.getPath()));
+        courseIV.setTag(p.getPath());
         View finalListitemView = listitemView;
         cards.add(listitemView);
         listitemView.setOnClickListener(v -> {
@@ -64,25 +65,14 @@ public class PhotoGVAdapter extends ArrayAdapter<Photo>{
         return listitemView;
     }
 
-    /*public void removeItem(String albumName){
-        int position = 0;
-        for(Album a : albumList){
-            if((abbrev(a.getAlbumName())).equals(albumName)){
-                position = albumList.indexOf(a);
-            }
-        }
-        albumList.remove(position);
-        selected = null;
-        notifyDataSetChanged();
-    }
-
     public void deselect(){
         for(View view : cards){
             view.setBackgroundColor(Color.parseColor("#ffffff"));
         }
+        selected = null;
     }
 
-    public void renameItem(String oldName, String newName){
+    /*public void renameItem(String oldName, String newName){
         for(Album a : albumList){
             if((abbrev(a.getAlbumName())).equals(oldName)){
                 a.changeName(newName);

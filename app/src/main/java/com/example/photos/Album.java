@@ -3,10 +3,6 @@ package com.example.photos;
 import java.io.Serializable;
 import java.util.HashMap;
 
-/**
- * Album has a name and a HashMap of photo values.
- * @author Gigna
- */
 public class Album implements Serializable {
     protected String albumName;
 

@@ -302,6 +302,13 @@ public class Photos extends AppCompatActivity {
                                     albumList = (ArrayList<Album>) catcher_intent.getExtras().getSerializable("albumList");
                                 }
                             }
+                            try {
+                                albumList = readApp();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            } catch (ClassNotFoundException e) {
+                                throw new RuntimeException(e);
+                            }
                             albumGVAdapter = new AlbumGVAdapter(Photos.this, albumList);
                             albumGrid.setAdapter(albumGVAdapter);
                         }

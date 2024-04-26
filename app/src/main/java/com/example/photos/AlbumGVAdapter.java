@@ -70,7 +70,6 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
             }
         }
         albumList.remove(position);
-        selected = null;
         notifyDataSetChanged();
     }
 
@@ -78,6 +77,7 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
         for(View view : cards){
             view.setBackgroundColor(Color.parseColor("#ffffff"));
         }
+        selected = null;
     }
 
     public void renameItem(String oldName, String newName){

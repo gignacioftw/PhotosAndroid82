@@ -1,17 +1,8 @@
 package com.example.photos;
 
-
-import android.net.Uri;
-
 import java.io.Serializable;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Calendar;
 
-/**
- * Photo has a name, a path, a caption, and an ArrayList of tags
- * @author Gigna
- */
 public class Photo implements Serializable {
     protected String name;
     protected String path;

@@ -2,10 +2,6 @@ package com.example.photos;
 
 import java.io.Serializable;
 
-/**
- * Tag has a name and a value
- * @author Gigna
- */
 public class Tag implements Serializable {
     protected String name;
     protected String value;
