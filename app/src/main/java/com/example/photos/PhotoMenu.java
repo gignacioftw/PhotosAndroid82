@@ -67,7 +67,11 @@ public class PhotoMenu extends AppCompatActivity {
     }
 
     private void pickImage(){
-        Intent i = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        i.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         launcher.launch(i);
     }
 
@@ -77,6 +81,7 @@ public class PhotoMenu extends AppCompatActivity {
                 result -> {
                     try {
                         Uri imageUri = result.getData().getData();
+                        getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         String fileName = DocumentFile.fromSingleUri(PhotoMenu.this, imageUri).getName();
                         photoList.add(new Photo(fileName, imageUri.toString()));
                         photoGrid.setAdapter(photoGVAdapter);
@@ -100,7 +105,7 @@ public class PhotoMenu extends AppCompatActivity {
         );
     }
 
-    public void writeApp() throws IOException, ClassNotFoundException {
+    public void writeApp() throws IOException {
         @SuppressLint("SdCardPath") FileOutputStream stream = new FileOutputStream("/data/user/0/com.example.photos/files/data.dat");
         ObjectOutputStream oos = new ObjectOutputStream(stream);
         oos.writeObject(albumList);
