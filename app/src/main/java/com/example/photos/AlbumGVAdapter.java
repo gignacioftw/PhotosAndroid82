@@ -89,4 +89,5 @@ public class AlbumGVAdapter extends ArrayAdapter<Album> {
         selected = null;
         notifyDataSetChanged();
     }
+
 }

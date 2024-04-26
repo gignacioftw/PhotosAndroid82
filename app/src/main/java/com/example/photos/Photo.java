@@ -14,18 +14,18 @@ import java.util.Calendar;
  */
 public class Photo implements Serializable {
     protected String name;
-    protected Uri path;
+    protected String path;
     protected ArrayList<Tag> tags = new ArrayList<>();
     public Photo(){
 
     }
 
-    public Photo(String name, Uri path){
+    public Photo(String name, String path){
         this.name = name;
         this.path = path;
     }
 
-    public Uri getPath(){
+    public String getPath(){
         return path;
     }
 

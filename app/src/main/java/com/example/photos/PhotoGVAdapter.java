@@ -5,6 +5,7 @@ import static com.example.photos.Photos.abbrev;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,7 @@ public class PhotoGVAdapter extends ArrayAdapter<Photo>{
         ImageView courseIV = listitemView.findViewById(R.id.grid_image);
 
         courseTV.setText(abbrev(p.getName()));
-        courseIV.setImageURI(p.getPath());
+        courseIV.setImageURI(Uri.parse(p.getPath()));
         View finalListitemView = listitemView;
         cards.add(listitemView);
         listitemView.setOnClickListener(v -> {

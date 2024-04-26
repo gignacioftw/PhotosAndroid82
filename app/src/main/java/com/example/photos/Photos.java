@@ -11,6 +11,10 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,16 +25,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Photos extends AppCompatActivity {
-    private GridView albumGrid;
+    private  GridView albumGrid;
     private EditText albumNameInput;
 
     private ArrayList<Album> albumList;
 
     private EditText renameInput;
+
+    private  AlbumGVAdapter albumGVAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +59,7 @@ public class Photos extends AppCompatActivity {
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        AlbumGVAdapter albumGVAdapter = new AlbumGVAdapter(Photos.this, albumList);
+        albumGVAdapter = new AlbumGVAdapter(Photos.this, albumList);
         albumGrid.setAdapter(albumGVAdapter);
 
         //create alert
@@ -219,7 +224,7 @@ public class Photos extends AppCompatActivity {
                 }
                 args.putSerializable("albumList", albumList);
                 intent.putExtras(args);
-                startActivity(intent);
+                catcherForResult.launch(intent);
             }
             else{
                 Toast.makeText(Photos.this, "Please select an album", Toast.LENGTH_SHORT).show();
@@ -249,7 +254,7 @@ public class Photos extends AppCompatActivity {
     }
 
     public ArrayList<Album> readApp() throws IOException, ClassNotFoundException {
-        FileInputStream stream = Photos.this.getApplicationContext().openFileInput("data.dat");
+        FileInputStream stream =  Photos.this.getApplicationContext().openFileInput("data.dat");
         ObjectInputStream oos;
         try {
             oos = new ObjectInputStream(stream);
@@ -285,4 +290,21 @@ public class Photos extends AppCompatActivity {
             return s;
         }
     }
+
+    ActivityResultLauncher<Intent> catcherForResult =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    new ActivityResultCallback<ActivityResult>() {
+                        @Override
+                        public void onActivityResult(ActivityResult result) {
+                            if(result.getResultCode() == PhotoMenu.TAG_REVIEWER){
+                                Intent catcher_intent = result.getData();
+                                if(catcher_intent != null){
+                                    albumList = (ArrayList<Album>) catcher_intent.getExtras().getSerializable("albumList");
+                                }
+                            }
+                            albumGVAdapter = new AlbumGVAdapter(Photos.this, albumList);
+                            albumGrid.setAdapter(albumGVAdapter);
+                        }
+                    }
+            );
 }

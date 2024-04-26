@@ -83,6 +83,23 @@
         app:strokeColor="#FFFFFF"
         app:strokeWidth="1dp" />
 
+    <Button
+        android:id="@+id/photoBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="190dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:text="Back"
+        app:layout_constraintBottom_toBottomOf="@+id/photoToolbar"
+        app:layout_constraintEnd_toEndOf="@+id/photoToolbar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/photoToolbar"
+        app:layout_constraintTop_toTopOf="@+id/photoToolbar"
+        app:layout_constraintVertical_bias="1.0"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="1dp" />
+
     <ImageView
         android:id="@+id/previewSelect"
         android:layout_width="wrap_content"
