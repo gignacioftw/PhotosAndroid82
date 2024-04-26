@@ -1,7 +1,4 @@
 # TODO
-__Albums__
-- Open album
-
 __Photo__
 - Add photo
 - Delete photo
