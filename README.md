@@ -1,6 +1,5 @@
 # TODO
 __Photo__
-- Add photo
 - Delete photo
 - Move photo
 - __Display photo__
