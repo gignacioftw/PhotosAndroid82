@@ -1,6 +1,5 @@
 # TODO
 __Photo__
-- Delete photo
 - Move photo
 - __Display photo__
   - Add tags (person and location)
