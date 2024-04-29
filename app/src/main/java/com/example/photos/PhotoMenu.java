@@ -6,14 +6,17 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Spinner;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.documentfile.provider.DocumentFile;
 
@@ -22,11 +25,12 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class PhotoMenu extends AppCompatActivity {
 
     public static final int TAG_REVIEWER = 1;
+
+    Spinner albumSelect;
     GridView photoGrid;
 
     String photoName;
@@ -40,8 +44,6 @@ public class PhotoMenu extends AppCompatActivity {
 
     Album album;
 
-    ImageView previewURI;
-
     PhotoGVAdapter photoGVAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +52,11 @@ public class PhotoMenu extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         photoGrid = findViewById(R.id.photoGrid);
         barLabel = findViewById(R.id.photoLabel);
-        previewURI = findViewById(R.id.previewSelect);
         Button uploadButton = findViewById(R.id.uploadPhoto);
         Button backButton = findViewById(R.id.photoBack);
         Button deleteButton = findViewById(R.id.deletePhoto);
         Button deselectButton = findViewById(R.id.photoDeselect);
+        Button moveButton = findViewById(R.id.movePhoto);
         Intent intent = this.getIntent();
         albumList = (ArrayList<Album>) intent.getExtras().getSerializable("albumList");
         album = (Album)intent.getExtras().getSerializable("album");
@@ -99,7 +101,84 @@ public class PhotoMenu extends AppCompatActivity {
                 Toast.makeText(this, "Please select a photo", Toast.LENGTH_SHORT).show();
             }
         });
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("Album name");
+        b.setMessage("Please select an album");
+        albumSelect = new Spinner(this);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        albumSelect.setAdapter(arrayAdapter);
+        arrayAdapter.add("");
+        b.setView(albumSelect);
+        b.setPositiveButton("Enter", (dialog, which) -> {
+            String moveTo = albumSelect.getSelectedItem().toString();
+            if(!moveTo.isEmpty()) {
+                Album move = new Album();
+                for (int i = 0; i < albumList.size(); i++) {
+                    if (albumList.get(i).getAlbumName().equals(moveTo)) {
+                        move = albumList.get(i);
+                    }
+                }
+                String photoPath = ((ImageView) photoGVAdapter.selected.findViewById(R.id.grid_image)).getTag().toString();
+                for (int i = 0; i < photoList.size(); i++) {
+                    if (photoList.get(i).getPath().equals(photoPath)) {
+                        for(Album a : albumList) {
+                            if (a.getAlbumName().equals(album.getAlbumName())) {
+                                move.addPhoto(photoList.get(i));
+                                a.removePhoto(photoList.get(i).getName());
+                                photoList.remove(photoList.get(i));
+                                photoGVAdapter.notifyDataSetChanged();
+                                i--;
+                                Toast.makeText(this, "Photo moved to: " + moveTo, Toast.LENGTH_SHORT).show();}
+                        }
+                    }
+                }
+            }
+            else{
+                Toast.makeText(this, "Please select an album", Toast.LENGTH_SHORT).show();
+            }
+            Intent backPhotos = new Intent();
+            Bundle args = new Bundle();
+            args.putSerializable("albumList", albumList);
+            backPhotos.putExtras(args);
+            setResult(TAG_REVIEWER, backPhotos);
+            try {
+                writeApp();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            arrayAdapter.clear();
+            dialog.dismiss();
+
+        });
+        b.setNegativeButton("Cancel", (dialog, which) -> {
+            arrayAdapter.clear();
+            dialog.dismiss();
+        });
+        AlertDialog a = b.create();
         deselectButton.setOnClickListener(v3 -> photoGVAdapter.deselect());
+        moveButton.setOnClickListener(v4 -> {
+            if(photoGVAdapter.selected != null) {
+                if(albumList.size() > 1) {
+                    for (int i = 0; i < albumList.size(); i++) {
+                        if(arrayAdapter.isEmpty()){
+                            arrayAdapter.add("");
+                        }
+                        else if(!album.getAlbumName().equals(albumList.get(i).getAlbumName())){
+                            arrayAdapter.add(albumList.get(i).getAlbumName());
+                        }
+                        albumSelect.setAdapter(arrayAdapter);
+                    }
+                    a.show();
+                }
+                else{
+                    Toast.makeText(this, "No other albums", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else{
+                Toast.makeText(this, "Please select a photo", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void pickImage(){
@@ -108,11 +187,6 @@ public class PhotoMenu extends AppCompatActivity {
         i.setType("image/*");
         i.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        launcher.launch(i);
-    }
-
-    private void deleteImage(){
-        Intent i = new Intent();
         launcher.launch(i);
     }
 

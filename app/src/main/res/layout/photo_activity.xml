@@ -57,6 +57,20 @@
         app:layout_constraintVertical_bias="1.0"
         tools:visibility="visible" />
 
+    <Button
+        android:id="@+id/movePhoto"
+        android:layout_width="102dp"
+        android:layout_height="69dp"
+        android:text="Move Photo"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.663"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:visibility="visible" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/photoToolbar"
         android:layout_width="409dp"
@@ -113,13 +127,5 @@
         app:layout_constraintVertical_bias="1.0"
         app:strokeColor="#FFFFFF"
         app:strokeWidth="1dp" />
-
-    <ImageView
-        android:id="@+id/previewSelect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="137dp"
-        tools:layout_editor_absoluteY="512dp"
-        tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
