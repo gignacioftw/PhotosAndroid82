@@ -39,6 +39,11 @@
             android:exported="false"
             android:parentActivityName=".DisplayMenu">
         </activity>
+        <activity
+            android:name=".Search"
+            android:exported="false"
+            android:parentActivityName=".PhotoMenu">
+        </activity>
     </application>
 
 </manifest>

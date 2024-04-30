@@ -64,6 +64,7 @@ public class PhotoMenu extends AppCompatActivity {
         Button deselectButton = findViewById(R.id.photoDeselect);
         Button moveButton = findViewById(R.id.movePhoto);
         Button displayButton = findViewById(R.id.displayPhoto);
+        Button searchButton = findViewById(R.id.searchButton);
         Intent intent = this.getIntent();
         albumList = (ArrayList<Album>) intent.getExtras().getSerializable("albumList");
         album = (Album)intent.getExtras().getSerializable("album");
@@ -206,6 +207,26 @@ public class PhotoMenu extends AppCompatActivity {
             }
             else{
                 Toast.makeText(this, "Please select a photo", Toast.LENGTH_SHORT).show();
+            }
+        });
+        searchButton.setOnClickListener(v6 -> {
+            boolean hasTags = false;
+            ArrayList<Photo> megaPhotoList = new ArrayList<>();
+            for(Album al : albumList){
+                megaPhotoList.addAll(Arrays.asList(al.getPhotos()));
+            }
+            for(Photo ph : megaPhotoList){
+                hasTags = ph.returnTags().length != 0;
+            }
+            if(hasTags){
+                Intent searchIntent = new Intent(this, Search.class);
+                Bundle args1 = new Bundle();
+                args1.putSerializable("photoList", megaPhotoList);
+                searchIntent.putExtras(args1);
+                startActivity(searchIntent);
+            }
+            else{
+                Toast.makeText(this, "Please add some tags", Toast.LENGTH_SHORT).show();
             }
         });
     }
