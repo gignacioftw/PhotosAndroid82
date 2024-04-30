@@ -34,6 +34,11 @@
             android:exported="false"
             android:parentActivityName=".PhotoMenu">
         </activity>
+        <activity
+            android:name=".Slideshow"
+            android:exported="false"
+            android:parentActivityName=".DisplayMenu">
+        </activity>
     </application>
 
 </manifest>

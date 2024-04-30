@@ -52,6 +52,7 @@ public class DisplayMenu extends AppCompatActivity {
         Button deleteButton = findViewById(R.id.deleteTag);
         TextView photoLabel = findViewById(R.id.displayLabel);
         Button backButton = findViewById(R.id.displayBack);
+        Button slideshowButton = findViewById(R.id.slideshow);
         Intent intent = this.getIntent();
         album = (Album) intent.getExtras().getSerializable("album");
         photoList = (ArrayList<Photo>) intent.getExtras().getSerializable("photoList");
@@ -207,6 +208,14 @@ public class DisplayMenu extends AppCompatActivity {
                 throw new RuntimeException(e);
             }
             DisplayMenu.super.onBackPressed();
+        });
+        slideshowButton.setOnClickListener(v3 -> {
+            Intent i = new Intent(this, Slideshow.class);
+            Bundle args = new Bundle();
+            args.putSerializable("photoList", photoList);
+            args.putSerializable("photo", photo);
+            i.putExtras(args);
+            this.startActivity(i);
         });
     }
 
