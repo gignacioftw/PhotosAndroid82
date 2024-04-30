@@ -14,14 +14,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Spinner;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.documentfile.provider.DocumentFile;
 
+import java.io.EOFException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +50,7 @@ public class PhotoMenu extends AppCompatActivity {
     Album album;
 
     PhotoGVAdapter photoGVAdapter;
+    @SuppressLint("CutPasteId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +63,7 @@ public class PhotoMenu extends AppCompatActivity {
         Button deleteButton = findViewById(R.id.deletePhoto);
         Button deselectButton = findViewById(R.id.photoDeselect);
         Button moveButton = findViewById(R.id.movePhoto);
+        Button displayButton = findViewById(R.id.displayPhoto);
         Intent intent = this.getIntent();
         albumList = (ArrayList<Album>) intent.getExtras().getSerializable("albumList");
         album = (Album)intent.getExtras().getSerializable("album");
@@ -179,6 +186,28 @@ public class PhotoMenu extends AppCompatActivity {
                 Toast.makeText(this, "Please select a photo", Toast.LENGTH_SHORT).show();
             }
         });
+        displayButton.setOnClickListener(v5 -> {
+            if(photoGVAdapter.selected != null){
+                String text = ((TextView) photoGVAdapter.selected.findViewById(R.id.item_name)).getText().toString();
+                Toast.makeText(PhotoMenu.this, "Opening " + text, Toast.LENGTH_SHORT).show();
+                photoGVAdapter.deselect();
+                Intent intent1 = new Intent(PhotoMenu.this, DisplayMenu.class);
+                Bundle args = new Bundle();
+                for (Photo photo : photoList) {
+                    if (abbrev(photo.getName()).equals(text)) {
+                        args.putSerializable("photo", photo);
+                    }
+                }
+                args.putSerializable("photoList", photoList);
+                args.putSerializable("albumList", albumList);
+                args.putSerializable("album", album);
+                intent1.putExtras(args);
+                catcherForResult.launch(intent1);
+            }
+            else{
+                Toast.makeText(this, "Please select a photo", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void pickImage(){
@@ -227,4 +256,40 @@ public class PhotoMenu extends AppCompatActivity {
         oos.close();
         stream.close();
     }
+
+    public ArrayList<Album> readApp() throws IOException, ClassNotFoundException {
+        FileInputStream stream =  PhotoMenu.this.getApplicationContext().openFileInput("data.dat");
+        ObjectInputStream oos;
+        try {
+            oos = new ObjectInputStream(stream);
+        } catch (EOFException e) {
+            return new ArrayList<>();
+        }
+        ArrayList<Album> albumArrayList = (ArrayList<Album>) oos.readObject();
+        stream.close();
+        oos.close();
+        return albumArrayList;
+    }
+
+    ActivityResultLauncher<Intent> catcherForResult =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    new ActivityResultCallback<ActivityResult>() {
+                        @Override
+                        public void onActivityResult(ActivityResult result) {
+                            if(result.getResultCode() == DisplayMenu.TAG_REVIEWER){
+                                Intent catcher_intent = result.getData();
+                                if(catcher_intent != null){
+                                    photoList = (ArrayList<Photo>) catcher_intent.getExtras().getSerializable("photoList");
+                                }
+                            }
+                            try {
+                                albumList = readApp();
+                            } catch (IOException | ClassNotFoundException e) {
+                                throw new RuntimeException(e);
+                            }
+                            photoGVAdapter = new PhotoGVAdapter(PhotoMenu.this, photoList);
+                            photoGrid.setAdapter(photoGVAdapter);
+                        }
+                    }
+            );
 }

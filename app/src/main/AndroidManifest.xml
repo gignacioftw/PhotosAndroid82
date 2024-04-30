@@ -29,6 +29,11 @@
             android:exported="false"
             android:parentActivityName=".Photos">
         </activity>
+        <activity
+            android:name=".DisplayMenu"
+            android:exported="false"
+            android:parentActivityName=".PhotoMenu">
+        </activity>
     </application>
 
 </manifest>

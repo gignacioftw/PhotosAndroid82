@@ -2,8 +2,11 @@ package com.example.photos;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Photo implements Serializable {
+    private HashMap<String, Integer> tagTypes;
+
     protected String name;
     protected String path;
     protected ArrayList<Tag> tags = new ArrayList<>();
@@ -14,6 +17,9 @@ public class Photo implements Serializable {
     public Photo(String name, String path){
         this.name = name;
         this.path = path;
+        this.tagTypes = new HashMap<>();
+        tagTypes.put("location", 0);
+        tagTypes.put("person", 1);
     }
 
     public String getPath(){
@@ -57,5 +63,13 @@ public class Photo implements Serializable {
             }
         }
         return false;
+    }
+
+    public Boolean canAdd(String type, Photo t){
+        return tagTypes.get(type) != 0 || !t.hasType(type);
+    }
+
+    public String[] returnTagTypes(){
+        return tagTypes.keySet().toArray(new String[0]);
     }
 }
